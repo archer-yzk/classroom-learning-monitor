@@ -1,0 +1,27 @@
+# Python 运行缓存
+__pycache__/
+*.py[cod]
+
+# 本地虚拟环境
+.venv/
+
+# 编辑器配置
+.idea/
+.vscode/
+
+# 后续阶段产生的本地数据和上传文件
+database/*.db
+database/*.db-*
+storage/uploads/*
+!storage/uploads/.gitkeep
+
+# 临时文件
+tmp/
+
+# 提交打包产物
+dist/
+
+# 本地工具生成的中间产物
+.codex-build/
+.codex-finalizer/
+.pptx-output/

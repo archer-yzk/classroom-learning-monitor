@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员端 - 课堂学情监控管理系统</title>
+    <link rel="stylesheet" href="/static/css/base.css?v=21">
+</head>
+<body data-role="admin">
+    <main class="welcome-card dashboard-card admin-dashboard-card">
+        <header class="app-topbar">
+            <div class="brand-lockup compact">
+                <span class="brand-mark">智</span>
+                <div><strong>ClassInsight</strong><span>智慧课堂学情中心</span></div>
+            </div>
+            <span class="system-status"><i></i>管理服务在线</span>
+        </header>
+        <section class="dashboard-hero admin-hero">
+            <div>
+                <span class="stage-label">管理控制台</span>
+                <h1>你好，<span data-user-name>管理员</span></h1>
+                <p>账号 <span data-username></span>　·　<span data-current-date></span>　·　统一管理平台用户与运行参数</p>
+            </div>
+            <div class="hero-orb admin" aria-hidden="true"><span>管</span></div>
+        </section>
+
+        <nav class="workspace-tabs" aria-label="管理员功能导航">
+            <strong>学情监控</strong>
+            <button type="button" class="active" data-workspace-tab="courses" data-mobile-label="课程" aria-pressed="true">
+                课程与课堂
+            </button>
+            <button type="button" data-workspace-tab="users" data-mobile-label="用户" aria-pressed="false">
+                用户管理
+            </button>
+            <button type="button" data-workspace-tab="settings" data-mobile-label="设置" aria-pressed="false">
+                统计周期
+            </button>
+            <button class="logout-button" type="button" data-logout data-mobile-label="退出">退出登录</button>
+        </nav>
+
+        <section class="course-management-panel" data-workspace-panel="courses" data-workspace-default>
+            <div class="section-heading">
+                <div>
+                    <span class="stage-label">教学安排</span>
+                    <h2>课程与课堂管理</h2>
+                </div>
+                <button type="button" class="secondary-button" data-refresh-courses>
+                    刷新列表
+                </button>
+            </div>
+            <p class="course-management-intro">
+                先为教师新增课程，再创建具体课堂场次；待开始的课堂可在列表中一键开课。
+            </p>
+
+            <div class="course-management-forms">
+                <article class="course-management-form-card">
+                    <h3>新增课程</h3>
+                    <form id="admin-course-form">
+                        <label for="course-teacher">授课教师</label>
+                        <select id="course-teacher" name="teacher_id" required></select>
+
+                        <label for="new-course-name">课程名称</label>
+                        <input
+                            id="new-course-name"
+                            name="name"
+                            maxlength="100"
+                            placeholder="例如：Web 前端开发"
+                            required
+                        >
+
+                        <label for="new-course-description">课程说明（可选）</label>
+                        <textarea
+                            id="new-course-description"
+                            name="description"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="简要说明课程内容"
+                        ></textarea>
+                        <button type="submit">保存课程</button>
+                    </form>
+                </article>
+
+                <article class="course-management-form-card">
+                    <h3>创建课堂场次</h3>
+                    <form id="admin-classroom-form">
+                        <label for="classroom-course">所属课程</label>
+                        <select id="classroom-course" name="course_id" required></select>
+
+                        <label for="classroom-class-name">上课班级</label>
+                        <input
+                            id="classroom-class-name"
+                            name="class_name"
+                            maxlength="100"
+                            placeholder="例如：软件工程2班"
+                            required
+                        >
+
+                        <label for="classroom-topic">课堂主题</label>
+                        <input
+                            id="classroom-topic"
+                            name="topic"
+                            maxlength="200"
+                            placeholder="例如：异步编程"
+                            required
+                        >
+
+                        <div class="classroom-form-row">
+                            <div>
+                                <label for="classroom-start-time">计划开始时间</label>
+                                <input
+                                    id="classroom-start-time"
+                                    name="start_time"
+                                    type="datetime-local"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <label for="classroom-initial-status">创建后状态</label>
+                                <select id="classroom-initial-status" name="status">
+                                    <option value="scheduled">待开始</option>
+                                    <option value="active">立即上课</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit">创建课堂</button>
+                    </form>
+                </article>
+            </div>
+
+            <p class="course-management-message" data-course-management-message aria-live="polite">
+                正在读取课程与课堂……
+            </p>
+
+            <div class="course-management-lists">
+                <article>
+                    <div class="course-list-heading">
+                        <h3>课程列表</h3>
+                        <span>共 <strong data-course-total>0</strong> 门</span>
+                    </div>
+                    <div class="course-management-table-wrap" role="region" aria-label="课程列表" tabindex="0">
+                        <table class="course-management-table">
+                            <caption class="visually-hidden">课程、授课教师和课堂数量</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">课程</th>
+                                    <th scope="col">授课教师</th>
+                                    <th scope="col">说明</th>
+                                    <th scope="col">课堂场次</th>
+                                    <th scope="col">进行中</th>
+                                    <th scope="col">状态</th>
+                                </tr>
+                            </thead>
+                            <tbody data-course-rows></tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article>
+                    <div class="course-list-heading">
+                        <h3>最近课堂</h3>
+                        <span>共 <strong data-classroom-total>0</strong> 节</span>
+                    </div>
+                    <div class="course-management-table-wrap" role="region" aria-label="最近课堂列表" tabindex="0">
+                        <table class="course-management-table classroom-management-table">
+                            <caption class="visually-hidden">最近课堂及状态操作</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">课程</th>
+                                    <th scope="col">教师</th>
+                                    <th scope="col">班级</th>
+                                    <th scope="col">课堂主题</th>
+                                    <th scope="col">开始时间</th>
+                                    <th scope="col">状态</th>
+                                    <th scope="col">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody data-classroom-rows></tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="admin-users-panel" data-workspace-panel="users">
+            <div class="section-heading">
+                <div>
+                    <span class="stage-label">账号管理</span>
+                    <h2>系统用户列表</h2>
+                </div>
+                <div class="admin-users-heading-actions">
+                    <span class="refresh-time">共 <strong data-admin-user-total>0</strong> 人</span>
+                    <button type="button" data-show-create-user>添加用户</button>
+                </div>
+            </div>
+
+            <section class="admin-user-create-panel" data-admin-user-create-panel hidden>
+                <div class="admin-user-create-heading">
+                    <h3 data-user-form-title>添加用户账号</h3>
+                    <button type="button" class="text-button" data-hide-create-user>取消</button>
+                </div>
+                <form id="admin-user-create-form">
+                    <div class="admin-user-form-grid">
+                        <div>
+                            <label for="new-user-role">用户角色</label>
+                            <select id="new-user-role" name="role" required>
+                                <option value="student">学生</option>
+                                <option value="teacher">教师</option>
+                                <option value="admin">管理员</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="new-user-username">登录账号</label>
+                            <input id="new-user-username" name="username" minlength="3" maxlength="50" required>
+                        </div>
+                        <div>
+                            <label for="new-user-password" data-user-password-label>初始密码</label>
+                            <input id="new-user-password" name="password" type="password" minlength="6" maxlength="128" required>
+                        </div>
+                        <div>
+                            <label for="new-user-name">姓名</label>
+                            <input id="new-user-name" name="name" maxlength="50" required>
+                        </div>
+                        <div>
+                            <label for="new-user-age">年龄</label>
+                            <input id="new-user-age" name="age" type="number" min="1" max="120" required>
+                        </div>
+                        <div>
+                            <label for="new-user-gender">性别</label>
+                            <select id="new-user-gender" name="gender" required>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="new-user-phone">联系方式</label>
+                            <input id="new-user-phone" name="phone" type="tel" maxlength="30" required>
+                        </div>
+                    </div>
+
+                    <fieldset class="student-fields" data-student-fields>
+                        <legend>学生专属信息</legend>
+                        <div class="admin-user-form-grid">
+                            <div>
+                                <label for="new-user-student-no">学号</label>
+                                <input id="new-user-student-no" name="student_no" maxlength="30">
+                            </div>
+                            <div>
+                                <label for="new-user-grade">年级</label>
+                                <input id="new-user-grade" name="grade" maxlength="30" placeholder="例如：2026级">
+                            </div>
+                            <div>
+                                <label for="new-user-class-name">班级</label>
+                                <input id="new-user-class-name" name="class_name" maxlength="100">
+                            </div>
+                            <div>
+                                <label for="new-user-major">专业</label>
+                                <input id="new-user-major" name="major" maxlength="100">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <button type="submit" data-user-form-submit>保存新用户</button>
+                </form>
+                <p class="admin-user-create-message" data-admin-user-create-message aria-live="polite"></p>
+            </section>
+
+            <form id="admin-user-filter-form" class="admin-user-filter-form">
+                <div>
+                    <label for="admin-user-keyword">关键词</label>
+                    <input
+                        id="admin-user-keyword"
+                        name="keyword"
+                        type="text"
+                        maxlength="50"
+                        placeholder="账号、姓名、学号或联系方式"
+                    >
+                </div>
+                <div>
+                    <label for="admin-user-role">用户角色</label>
+                    <select id="admin-user-role" name="role">
+                        <option value="">全部角色</option>
+                        <option value="student">学生</option>
+                        <option value="teacher">教师</option>
+                        <option value="admin">管理员</option>
+                    </select>
+                </div>
+                <div class="admin-user-filter-actions">
+                    <button type="submit">查询用户</button>
+                    <button type="button" class="secondary-button" data-reset-admin-user-filter>
+                        清空条件
+                    </button>
+                </div>
+            </form>
+            <p class="admin-users-message" data-admin-users-message role="status" aria-live="polite">正在读取用户列表……</p>
+
+            <div class="admin-user-table-wrap" data-admin-user-table-wrap role="region" aria-label="系统用户列表" tabindex="0" hidden>
+                <table class="admin-user-table">
+                    <caption class="visually-hidden">学生、教师和管理员账号列表</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">编号</th>
+                            <th scope="col">登录账号</th>
+                            <th scope="col">角色</th>
+                            <th scope="col">学号</th>
+                            <th scope="col">姓名</th>
+                            <th scope="col">年龄</th>
+                            <th scope="col">性别</th>
+                            <th scope="col">年级</th>
+                            <th scope="col">班级</th>
+                            <th scope="col">专业</th>
+                            <th scope="col">联系方式</th>
+                            <th scope="col">状态</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody data-admin-user-rows></tbody>
+                </table>
+            </div>
+            <p class="admin-users-empty" data-admin-users-empty hidden>
+                没有符合条件的用户。
+            </p>
+        </section>
+
+        <section class="settings-panel" data-workspace-panel="settings">
+            <span class="stage-label">系统参数</span>
+            <h2>学情统计周期配置</h2>
+            <p>系统允许设置 5～10 分钟，每个周期自动保存一次当前课堂学情快照。</p>
+
+            <form id="statistics-setting-form">
+                <label for="interval-minutes">统计周期</label>
+                <select id="interval-minutes" name="interval_minutes">
+                    <option value="5">5 分钟</option>
+                    <option value="6">6 分钟</option>
+                    <option value="7">7 分钟</option>
+                    <option value="8">8 分钟</option>
+                    <option value="9">9 分钟</option>
+                    <option value="10">10 分钟</option>
+                </select>
+                <button type="submit">保存统计周期</button>
+            </form>
+
+            <dl class="scheduler-status">
+                <div><dt>已生成快照</dt><dd><span data-snapshot-count>—</span> 个</dd></div>
+                <div><dt>最近生成时间</dt><dd data-latest-snapshot>—</dd></div>
+                <div><dt>进行中课堂</dt><dd><span data-active-session-count>—</span> 节</dd></div>
+                <div><dt>任务运行状态</dt><dd><span class="service-health"><i></i>运行正常</span></dd></div>
+            </dl>
+            <div class="settings-insights-grid">
+                <article class="snapshot-trend-card">
+                    <header>
+                        <div><span class="stage-label">近 7 天</span><h3>快照生成趋势</h3></div>
+                        <strong data-recent-snapshot-total>0 个</strong>
+                    </header>
+                    <div class="snapshot-mini-chart" data-snapshot-mini-chart aria-label="最近 7 天快照生成数量"></div>
+                </article>
+                <article class="setting-change-card">
+                    <span class="stage-label">当前配置</span>
+                    <h3>最近配置变更</h3>
+                    <dl>
+                        <div><dt>统计周期</dt><dd><span data-current-interval>—</span> 分钟</dd></div>
+                        <div><dt>更新时间</dt><dd data-setting-updated-at>—</dd></div>
+                        <div><dt>操作人员</dt><dd data-setting-updated-by>系统初始化</dd></div>
+                    </dl>
+                </article>
+            </div>
+            <p class="settings-message" data-settings-message aria-live="polite"></p>
+        </section>
+    </main>
+    <script src="/static/js/workspace-tabs.js?v=3" defer></script>
+    <script src="/static/js/api.js?v=2" defer></script>
+    <script src="/static/js/auth.js?v=7" defer></script>
+    <script src="/static/js/time-utils.js?v=2" defer></script>
+    <script src="/static/js/admin-courses.js?v=2" defer></script>
+    <script src="/static/js/admin-users.js?v=4" defer></script>
+    <script src="/static/js/admin-settings.js?v=4" defer></script>
+</body>
+</html>

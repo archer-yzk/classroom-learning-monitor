@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#123b5d">
+    <title>教师端 - 课堂学情监控管理系统</title>
+    <link rel="stylesheet" href="/static/css/base.css?v=21">
+</head>
+<body data-role="teacher">
+    <main class="welcome-card dashboard-card" data-active-workspace="overview">
+        <header class="app-topbar">
+            <div class="brand-lockup compact">
+                <span class="brand-mark">智</span>
+                <div><strong>ClassInsight</strong><span>智慧课堂学情中心</span></div>
+            </div>
+            <span class="system-status live-status"><i></i><span>实时监控中</span><small data-topbar-refresh>等待数据</small></span>
+        </header>
+        <section class="dashboard-hero">
+            <div>
+                <span class="stage-label">教师工作台</span>
+                <h1>你好，<span data-user-name>老师</span></h1>
+                <p>账号 <span data-username></span>　·　<span data-current-date></span>　·　用数据看见每一位学生</p>
+            </div>
+            <div class="hero-orb teacher" aria-hidden="true"><span>教</span></div>
+        </section>
+
+        <nav class="workspace-tabs" aria-label="教师功能导航">
+            <strong>学情监控</strong>
+            <button
+                type="button"
+                class="active"
+                data-workspace-tab="overview"
+                data-mobile-label="课堂"
+                aria-controls="teacher-classroom teacher-classroom-message teacher-actions teacher-statistics"
+                aria-pressed="true"
+            >
+                实时课堂
+            </button>
+            <button
+                type="button"
+                data-workspace-tab="alerts"
+                data-mobile-label="预警"
+                aria-controls="teacher-alerts"
+                aria-pressed="false"
+            >
+                学情预警
+            </button>
+            <button
+                type="button"
+                data-workspace-tab="discussion"
+                data-mobile-label="讨论"
+                aria-controls="teacher-discussion"
+                aria-pressed="false"
+            >
+                在线讨论
+            </button>
+            <a class="workspace-secondary-link" href="/teacher/history" data-mobile-label="历史">历史学情</a>
+            <button class="logout-button" type="button" data-logout data-mobile-label="退出">退出登录</button>
+        </nav>
+
+        <section id="teacher-classroom" class="classroom-card" data-classroom data-workspace-panel="overview" data-workspace-default>
+            <h2>当前授课课堂</h2>
+            <dl>
+                <div><dt>课程</dt><dd data-course-name>正在读取……</dd></div>
+                <div><dt>班级</dt><dd data-class-name>—</dd></div>
+                <div><dt>主题</dt><dd data-topic>—</dd></div>
+                <div><dt>授课教师</dt><dd data-teacher-name>—</dd></div>
+                <div><dt>开始时间</dt><dd data-start-time>—</dd></div>
+            </dl>
+        </section>
+        <p
+            id="teacher-classroom-message"
+            class="classroom-message"
+            data-classroom-message
+            data-workspace-panel="overview"
+            data-workspace-default
+            role="status"
+            aria-live="polite"
+        ></p>
+
+        <nav id="teacher-actions" class="teacher-actions" aria-label="历史查询入口" data-workspace-panel="overview" data-workspace-default>
+            <a href="/teacher/history">查询历史学情</a>
+        </nav>
+
+        <section id="teacher-statistics" class="statistics-panel" data-statistics-panel data-workspace-panel="overview" data-workspace-default hidden>
+            <div class="section-heading">
+                <div>
+                    <span class="stage-label">实时更新</span>
+                    <h2>当前学情统计</h2>
+                </div>
+                <span class="refresh-time">更新时间：<span data-refresh-time>—</span></span>
+            </div>
+
+            <div class="statistics-summary">
+                <article class="kpi-card kpi-students">
+                    <span>提交学生人数</span>
+                    <strong><span data-total-students>0</span><small data-eligible-students> / 0 人</small></strong>
+                    <small data-submission-meta>提交率 0%</small>
+                </article>
+                <article class="kpi-card kpi-average">
+                    <span>班级平均理解度</span>
+                    <strong data-average-score>0.00</strong>
+                    <small data-average-meta>满分 6 分</small>
+                </article>
+                <article class="kpi-card kpi-alerts">
+                    <span>本课堂待处理预警</span>
+                    <strong data-pending-kpi>0</strong>
+                    <small>需要教师关注</small>
+                </article>
+            </div>
+            <p class="variance-insight" data-variance-insight>
+                班级分歧程度：暂无数据（方差 <span data-variance>0.00</span>）
+            </p>
+
+            <h3>六级理解程度分布</h3>
+            <div class="score-distribution" data-score-distribution></div>
+
+            <div class="charts-grid">
+                <article class="chart-card">
+                    <h3>各分数段人数柱状图</h3>
+                    <div
+                        id="score-bar-chart"
+                        class="chart-canvas"
+                        role="img"
+                        aria-label="六级理解程度人数柱状图"
+                    ></div>
+                </article>
+                <article class="chart-card">
+                    <h3>最近五个统计周期趋势</h3>
+                    <div
+                        id="score-trend-chart"
+                        class="chart-canvas"
+                        role="img"
+                        aria-label="最近五个统计周期平均理解度趋势图"
+                    ></div>
+                </article>
+            </div>
+
+            <p class="statistics-note">
+                同一学生多次提交时，仅使用最近一次反馈计算当前状态。
+            </p>
+            <p class="statistics-message" data-statistics-message role="status" aria-live="polite"></p>
+        </section>
+
+        <section id="teacher-alerts" class="learning-alert-panel" data-workspace-panel="alerts">
+            <div class="section-heading learning-alert-heading">
+                <div>
+                    <span class="stage-label alert-stage-label">自主新增模块</span>
+                    <h2>学情预警与教师跟进</h2>
+                </div>
+                <strong class="pending-alert-count">
+                    待处理 <span data-pending-alert-count>0</span> 条
+                </strong>
+            </div>
+
+            <div class="learning-alert-toolbar">
+                <label for="learning-alert-status">预警状态</label>
+                <select id="learning-alert-status" data-learning-alert-status>
+                    <option value="">全部状态</option>
+                    <option value="pending" selected>待处理</option>
+                    <option value="resolved">已处理</option>
+                </select>
+                <button type="button" data-refresh-learning-alerts>刷新预警</button>
+            </div>
+
+            <p class="learning-alert-message" data-learning-alert-message role="status" aria-live="polite">
+                正在读取学情预警……
+            </p>
+            <div
+                class="learning-alert-table-wrap"
+                data-learning-alert-table-wrap
+                role="region"
+                aria-label="学情预警列表"
+                tabindex="0"
+                hidden
+            >
+                <table class="learning-alert-table">
+                    <caption class="visually-hidden">学生学情预警与教师跟进记录</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">学生</th>
+                            <th scope="col">班级</th>
+                            <th scope="col">课程</th>
+                            <th scope="col">最新低分</th>
+                            <th scope="col">状态</th>
+                            <th scope="col">更新时间</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody data-learning-alert-rows></tbody>
+                </table>
+            </div>
+            <p class="learning-alert-empty" data-learning-alert-empty hidden>
+                当前没有符合条件的学情预警。
+            </p>
+        </section>
+
+        <section id="teacher-discussion" class="discussion-panel" data-discussion-panel data-workspace-panel="discussion" hidden>
+            <div class="section-heading">
+                <div>
+                    <span class="stage-label">课堂交流</span>
+                    <h2>在线讨论</h2>
+                </div>
+                <span class="refresh-time">每 3 秒读取新消息</span>
+            </div>
+            <div
+                class="discussion-list"
+                data-discussion-list
+                aria-live="polite"
+                aria-relevant="additions"
+                aria-atomic="false"
+            >
+                <p class="discussion-empty" data-discussion-empty>
+                    <span aria-hidden="true">💬</span>
+                    <strong>暂无课堂讨论</strong>
+                    <small>新的课堂说明或答疑内容会在这里实时显示。</small>
+                </p>
+            </div>
+            <form id="discussion-form" class="discussion-form">
+                <label for="discussion-content">回复内容</label>
+                <textarea
+                    id="discussion-content"
+                    name="content"
+                    maxlength="500"
+                    rows="3"
+                    placeholder="回复学生问题或补充课堂说明"
+                    aria-describedby="discussion-count"
+                ></textarea>
+                <span class="discussion-upload-label">讨论图片（可选）</span>
+                <div class="discussion-upload-control">
+                    <input
+                        class="visually-hidden discussion-file-input"
+                        id="discussion-image"
+                        name="image"
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp"
+                        aria-describedby="discussion-file-hint discussion-file-name"
+                    >
+                    <label class="discussion-upload-button" for="discussion-image">
+                        <span aria-hidden="true">＋</span> 上传图片
+                    </label>
+                    <div class="discussion-upload-meta">
+                        <strong id="discussion-file-name" data-discussion-file-name>未选择图片</strong>
+                        <small id="discussion-file-hint">支持 JPG / PNG / GIF / WebP，最大 5 MB</small>
+                    </div>
+                    <button class="discussion-file-remove" type="button" data-discussion-file-remove hidden>
+                        移除
+                    </button>
+                </div>
+                <div class="discussion-form-footer">
+                    <span id="discussion-count" data-discussion-count>0 / 500</span>
+                    <button type="submit">发送消息</button>
+                </div>
+            </form>
+            <p class="discussion-status" data-discussion-status role="status" aria-live="polite"></p>
+        </section>
+
+    </main>
+    <div class="alert-drawer-backdrop" data-alert-drawer-backdrop hidden></div>
+    <aside class="alert-drawer" data-alert-drawer role="dialog" aria-modal="true" aria-labelledby="alert-drawer-title" hidden>
+        <header>
+            <div>
+                <span class="stage-label alert-stage-label">预警详情</span>
+                <h2 id="alert-drawer-title" data-alert-drawer-title>学生学情预警</h2>
+            </div>
+            <button type="button" class="drawer-close" data-alert-drawer-close aria-label="关闭预警详情">×</button>
+        </header>
+        <dl class="alert-drawer-details" data-alert-drawer-details></dl>
+        <div class="alert-drawer-note" data-alert-drawer-note></div>
+        <form class="alert-drawer-form" data-alert-drawer-form>
+            <label for="alert-drawer-teacher-note">教师跟进意见</label>
+            <textarea id="alert-drawer-teacher-note" name="teacher_note" rows="5" maxlength="500" required placeholder="填写辅导建议或跟进情况（1～500字）" aria-describedby="alert-drawer-validation"></textarea>
+            <p id="alert-drawer-validation" class="drawer-validation-message" data-alert-drawer-validation role="alert" aria-live="assertive"></p>
+            <button type="submit">完成跟进</button>
+        </form>
+    </aside>
+    <script src="/static/js/workspace-tabs.js?v=3" defer></script>
+    <script src="/static/vendor/echarts/echarts.min.js?v=6.1.0" defer></script>
+    <script src="/static/js/api.js?v=2" defer></script>
+    <script src="/static/js/auth.js?v=7" defer></script>
+    <script src="/static/js/time-utils.js?v=2" defer></script>
+    <script src="/static/js/classroom.js?v=4" defer></script>
+    <script src="/static/js/statistics.js?v=8" defer></script>
+    <script src="/static/js/learning-alerts.js?v=8" defer></script>
+    <script src="/static/js/discussion.js?v=9" defer></script>
+</body>
+</html>

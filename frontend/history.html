@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史学情查询 - 课堂学情监控管理系统</title>
+    <link rel="stylesheet" href="/static/css/base.css?v=21">
+</head>
+<body data-role="teacher">
+    <main class="welcome-card history-card">
+        <header class="app-topbar">
+            <div class="brand-lockup compact">
+                <span class="brand-mark">智</span>
+                <div><strong>ClassInsight</strong><span>智慧课堂学情中心</span></div>
+            </div>
+            <span class="system-status"><i></i>数据已同步</span>
+        </header>
+        <div class="section-heading history-heading">
+            <div>
+                <span class="stage-label">教师端</span>
+                <h1>历史学情查询</h1>
+                <p>欢迎，<span data-user-name>老师</span>（<span data-username></span>）</p>
+            </div>
+            <a class="secondary-link" href="/teacher">返回实时监控</a>
+        </div>
+
+        <section class="history-filter-panel" aria-labelledby="filter-title">
+            <h2 id="filter-title">组合查询条件</h2>
+            <form id="history-filter-form">
+                <div class="history-filter-grid">
+                    <div>
+                        <label for="course-name">课程名称</label>
+                        <input
+                            id="course-name"
+                            name="course_name"
+                            type="text"
+                            maxlength="100"
+                            placeholder="可输入部分名称，例如 Python"
+                        >
+                    </div>
+                    <div>
+                        <label for="start-time">上课开始时间（从）</label>
+                        <input id="start-time" name="start_time" type="datetime-local">
+                    </div>
+                    <div>
+                        <label for="end-time">上课开始时间（到）</label>
+                        <input id="end-time" name="end_time" type="datetime-local">
+                    </div>
+                </div>
+                <div class="history-filter-actions">
+                    <button type="submit">查询</button>
+                    <button class="secondary-button" type="button" data-reset-filter>清空条件</button>
+                    <button class="export-button" type="button" data-export-history disabled>
+                        导出当前结果
+                    </button>
+                </div>
+            </form>
+            <p class="history-message" data-history-message role="status" aria-live="polite">正在读取历史记录……</p>
+        </section>
+
+        <section class="history-results" aria-labelledby="results-title">
+            <div class="history-result-heading">
+                <h2 id="results-title">查询结果</h2>
+                <span>共 <strong data-history-total>0</strong> 条</span>
+            </div>
+            <div class="history-table-wrap" data-history-table-wrap role="region" aria-label="历史学情查询结果" tabindex="0" hidden>
+                <table class="history-table">
+                    <caption class="visually-hidden">按课程与时间筛选的历史学情统计</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">课程与班级</th>
+                            <th scope="col">上课时间</th>
+                            <th scope="col">统计周期</th>
+                            <th scope="col">提交人数</th>
+                            <th scope="col">平均分</th>
+                            <th scope="col">方差</th>
+                            <th scope="col">六级分布</th>
+                        </tr>
+                    </thead>
+                    <tbody data-history-rows></tbody>
+                </table>
+            </div>
+            <p class="history-empty" data-history-empty hidden>没有符合条件的历史统计记录。</p>
+        </section>
+
+        <button class="logout-button" type="button" data-logout>退出登录</button>
+    </main>
+    <script src="/static/js/api.js?v=2" defer></script>
+    <script src="/static/js/auth.js?v=7" defer></script>
+    <script src="/static/js/time-utils.js?v=2" defer></script>
+    <script src="/static/js/history.js?v=3" defer></script>
+</body>
+</html>

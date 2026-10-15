@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="课堂学情监控管理系统登录入口">
+    <meta name="theme-color" content="#123b5d">
+    <title>课堂学情监控管理系统</title>
+    <link rel="stylesheet" href="/static/css/base.css?v=21">
+</head>
+<body>
+    <main class="login-card">
+        <aside class="login-visual" aria-label="系统简介">
+            <div class="brand-lockup">
+                <span class="brand-mark">智</span>
+                <div>
+                    <strong>ClassInsight</strong>
+                    <span>智慧课堂学情中心</span>
+                </div>
+            </div>
+            <div class="login-visual-content">
+                <span class="eyebrow">SMART LEARNING ANALYTICS</span>
+                <h1>让每一次课堂反馈<br>都成为教学的依据</h1>
+                <p>实时感知学习状态，连接学生反馈、教师洞察与教学改进。</p>
+                <div class="feature-pills" aria-label="核心能力">
+                    <span>实时学情</span>
+                    <span>智能预警</span>
+                    <span>数据洞察</span>
+                </div>
+            </div>
+            <div class="login-metric-card" aria-hidden="true">
+                <span class="metric-icon">↗</span>
+                <div><strong>实时更新</strong><small>课堂数据持续同步中</small></div>
+                <span class="live-dot"></span>
+            </div>
+        </aside>
+
+        <section class="login-panel">
+            <div class="login-heading">
+                <span class="stage-label">欢迎回来</span>
+                <h2>登录系统</h2>
+                <p>选择登录方式，进入你的专属工作台。</p>
+            </div>
+
+        <div class="login-method-tabs" role="tablist" aria-label="登录方式">
+            <button
+                type="button"
+                id="login-tab-password"
+                class="login-method-tab active"
+                data-login-method="password"
+                role="tab"
+                aria-controls="login-form"
+                aria-selected="true"
+            >账号密码</button>
+            <button
+                type="button"
+                id="login-tab-sms"
+                class="login-method-tab"
+                data-login-method="sms"
+                role="tab"
+                aria-controls="sms-login-form"
+                aria-selected="false"
+                tabindex="-1"
+            >短信验证码</button>
+            <button
+                type="button"
+                id="login-tab-wechat"
+                class="login-method-tab"
+                data-login-method="wechat"
+                role="tab"
+                aria-controls="wechat-login-form"
+                aria-selected="false"
+                tabindex="-1"
+            >微信登录</button>
+            <button
+                type="button"
+                id="login-tab-qq"
+                class="login-method-tab"
+                data-login-method="qq"
+                role="tab"
+                aria-controls="qq-login-form"
+                aria-selected="false"
+                tabindex="-1"
+            >QQ登录</button>
+        </div>
+
+        <form
+            id="login-form"
+            class="login-method-form"
+            data-login-panel="password"
+            role="tabpanel"
+            aria-labelledby="login-tab-password"
+            aria-describedby="form-message"
+        >
+            <label for="username">用户名</label>
+            <input
+                id="username"
+                name="username"
+                autocomplete="username"
+                autocapitalize="none"
+                spellcheck="false"
+                maxlength="50"
+                required
+            >
+
+            <label for="password">密码</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+            <button type="submit">登录</button>
+        </form>
+
+        <form
+            id="sms-login-form"
+            class="login-method-form"
+            data-login-panel="sms"
+            role="tabpanel"
+            aria-labelledby="login-tab-sms"
+            aria-describedby="form-message"
+            hidden
+        >
+            <label for="sms-phone">手机号</label>
+            <input
+                id="sms-phone"
+                name="phone"
+                type="tel"
+                autocomplete="tel"
+                maxlength="30"
+                required
+            >
+
+            <label for="sms-code">六位验证码</label>
+            <div class="sms-code-row">
+                <input
+                    id="sms-code"
+                    name="code"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    pattern="[0-9]{6}"
+                    maxlength="6"
+                    required
+                >
+                <button type="button" data-send-sms-code>获取验证码</button>
+            </div>
+
+            <button type="submit">短信登录</button>
+        </form>
+
+        <form
+            id="wechat-login-form"
+            class="login-method-form third-party-login-form"
+            data-login-panel="wechat"
+            role="tabpanel"
+            aria-labelledby="login-tab-wechat"
+            aria-describedby="form-message"
+            hidden
+        >
+            <div class="third-party-login-note">
+                <span class="third-party-icon wechat-icon" aria-hidden="true">微</span>
+                <div>
+                    <strong>本地模拟微信授权</strong>
+                    <p>点击后模拟微信确认授权，并登录已绑定的学生账号 student001。</p>
+                </div>
+            </div>
+            <button type="submit" class="wechat-login-button">确认微信授权并登录</button>
+        </form>
+
+        <form
+            id="qq-login-form"
+            class="login-method-form third-party-login-form"
+            data-login-panel="qq"
+            role="tabpanel"
+            aria-labelledby="login-tab-qq"
+            aria-describedby="form-message"
+            hidden
+        >
+            <div class="third-party-login-note qq-login-note">
+                <span class="third-party-icon qq-icon" aria-hidden="true">Q</span>
+                <div>
+                    <strong>本地模拟 QQ 授权</strong>
+                    <p>点击后模拟 QQ 确认授权，并登录已绑定的教师账号 teacher001。</p>
+                </div>
+            </div>
+            <button type="submit" class="qq-login-button">确认 QQ 授权并登录</button>
+        </form>
+
+        <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+
+            <details class="test-accounts">
+                <summary>查看演示账号</summary>
+                <div class="demo-account-grid">
+                    <span>学生 <strong>student001</strong></span>
+                    <span>教师 <strong>teacher001</strong></span>
+                    <span>管理员 <strong>admin001</strong></span>
+                </div>
+                <p>统一密码：<strong>123456</strong>　·　测试手机号：13800000001</p>
+                <p>微信绑定学生账号，QQ 绑定教师账号；短信验证码会直接显示。</p>
+            </details>
+        </section>
+    </main>
+    <script src="/static/js/api.js?v=2" defer></script>
+    <script src="/static/js/auth.js?v=7" defer></script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#123b5d">
+    <title>学生端 - 课堂学情监控管理系统</title>
+    <link rel="stylesheet" href="/static/css/base.css?v=21">
+</head>
+<body data-role="student">
+    <main class="welcome-card dashboard-card">
+        <header class="app-topbar">
+            <div class="brand-lockup compact">
+                <span class="brand-mark">智</span>
+                <div><strong>ClassInsight</strong><span>智慧课堂学情中心</span></div>
+            </div>
+            <span class="system-status"><i></i>系统运行正常</span>
+        </header>
+        <section class="dashboard-hero">
+            <div>
+                <span class="stage-label">学生工作台</span>
+                <h1>你好，<span data-user-name>同学</span></h1>
+                <p>账号 <span data-username></span>　·　<span data-current-date></span>　·　今天也要保持好奇与专注</p>
+            </div>
+            <div class="hero-orb" aria-hidden="true"><span>学</span></div>
+        </section>
+
+        <nav class="workspace-tabs" aria-label="学生功能导航">
+            <strong>学情监控</strong>
+            <button
+                type="button"
+                class="active"
+                data-workspace-tab="overview"
+                data-mobile-label="课堂"
+                aria-controls="student-classroom student-classroom-message student-feedback"
+                aria-pressed="true"
+            >
+                课堂与反馈
+            </button>
+            <button
+                type="button"
+                data-workspace-tab="alerts"
+                data-mobile-label="提醒"
+                aria-controls="student-alerts"
+                aria-pressed="false"
+            >
+                学情提醒
+            </button>
+            <button
+                type="button"
+                data-workspace-tab="discussion"
+                data-mobile-label="讨论"
+                aria-controls="student-discussion"
+                aria-pressed="false"
+            >
+                在线讨论
+            </button>
+            <button class="logout-button" type="button" data-logout data-mobile-label="退出">退出登录</button>
+        </nav>
+
+        <section id="student-classroom" class="classroom-card" data-classroom data-workspace-panel="overview" data-workspace-default>
+            <h2>当前课堂</h2>
+            <dl>
+                <div><dt>课程</dt><dd data-course-name>正在读取……</dd></div>
+                <div><dt>班级</dt><dd data-class-name>—</dd></div>
+                <div><dt>主题</dt><dd data-topic>—</dd></div>
+                <div><dt>教师</dt><dd data-teacher-name>—</dd></div>
+                <div><dt>开始时间</dt><dd data-start-time>—</dd></div>
+            </dl>
+        </section>
+        <p
+            id="student-classroom-message"
+            class="classroom-message"
+            data-classroom-message
+            data-workspace-panel="overview"
+            data-workspace-default
+            role="status"
+            aria-live="polite"
+        ></p>
+
+        <section id="student-feedback" class="feedback-panel" data-feedback-panel data-workspace-panel="overview" data-workspace-default hidden>
+            <h2>我对当前内容的理解程度</h2>
+            <p>请选择最符合当前状态的表情，可以随理解变化重新提交。</p>
+            <form id="feedback-form">
+                <div class="feedback-options" data-feedback-options></div>
+                <button type="submit">提交学情反馈</button>
+            </form>
+            <p class="feedback-message" data-feedback-message aria-live="polite"></p>
+        </section>
+
+        <section id="student-alerts" class="learning-alert-panel student-learning-alert-panel" data-workspace-panel="alerts">
+            <div class="section-heading">
+                <div>
+                    <span class="stage-label alert-stage-label">自主新增模块</span>
+                    <h2>我的学情提醒</h2>
+                </div>
+                <button type="button" data-refresh-student-alerts>刷新提醒</button>
+            </div>
+            <p class="student-alert-summary">
+                待教师跟进：<strong data-student-pending-alert-count>0</strong> 条
+            </p>
+            <p class="learning-alert-message" data-student-alert-message role="status" aria-live="polite">
+                正在读取我的学情提醒……
+            </p>
+            <div class="student-alert-list" data-student-alert-list></div>
+            <p class="learning-alert-empty" data-student-alert-empty hidden>
+                目前没有学情提醒，继续保持课堂反馈。
+            </p>
+        </section>
+
+        <section id="student-discussion" class="discussion-panel" data-discussion-panel data-workspace-panel="discussion" hidden>
+            <div class="section-heading">
+                <div>
+                    <span class="stage-label">课堂交流</span>
+                    <h2>在线讨论</h2>
+                </div>
+                <span class="refresh-time">每 3 秒读取新消息</span>
+            </div>
+            <div
+                class="discussion-list"
+                data-discussion-list
+                aria-live="polite"
+                aria-relevant="additions"
+                aria-atomic="false"
+            >
+                <p class="discussion-empty" data-discussion-empty>
+                    <span aria-hidden="true">💬</span>
+                    <strong>暂无课堂讨论</strong>
+                    <small>有问题？试着向老师和同学发起第一条讨论。</small>
+                </p>
+            </div>
+            <form id="discussion-form" class="discussion-form">
+                <label for="discussion-content">讨论内容</label>
+                <textarea
+                    id="discussion-content"
+                    name="content"
+                    maxlength="500"
+                    rows="3"
+                    placeholder="输入对课堂内容的问题或想法"
+                    aria-describedby="discussion-count"
+                ></textarea>
+                <span class="discussion-upload-label">讨论图片（可选）</span>
+                <div class="discussion-upload-control">
+                    <input
+                        class="visually-hidden discussion-file-input"
+                        id="discussion-image"
+                        name="image"
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp"
+                        aria-describedby="discussion-file-hint discussion-file-name"
+                    >
+                    <label class="discussion-upload-button" for="discussion-image">
+                        <span aria-hidden="true">＋</span> 上传图片
+                    </label>
+                    <div class="discussion-upload-meta">
+                        <strong id="discussion-file-name" data-discussion-file-name>未选择图片</strong>
+                        <small id="discussion-file-hint">支持 JPG / PNG / GIF / WebP，最大 5 MB</small>
+                    </div>
+                    <button class="discussion-file-remove" type="button" data-discussion-file-remove hidden>
+                        移除
+                    </button>
+                </div>
+                <div class="discussion-form-footer">
+                    <span id="discussion-count" data-discussion-count>0 / 500</span>
+                    <button type="submit">发送消息</button>
+                </div>
+            </form>
+            <p class="discussion-status" data-discussion-status role="status" aria-live="polite"></p>
+        </section>
+
+    </main>
+    <script src="/static/js/workspace-tabs.js?v=3" defer></script>
+    <script src="/static/js/api.js?v=2" defer></script>
+    <script src="/static/js/auth.js?v=7" defer></script>
+    <script src="/static/js/time-utils.js?v=2" defer></script>
+    <script src="/static/js/classroom.js?v=4" defer></script>
+    <script src="/static/js/feedback.js?v=6" defer></script>
+    <script src="/static/js/student-learning-alerts.js?v=4" defer></script>
+    <script src="/static/js/discussion.js?v=9" defer></script>
+</body>
+</html>
